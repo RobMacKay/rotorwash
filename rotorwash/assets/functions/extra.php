@@ -1,10 +1,23 @@
 <?php
 /**
- * Miscellaneous st
+ * RotorWash extra functions.
  *
  * @package WordPress
- * @subpackage Epikness
- * @since Epikness 1.0
+ * @subpackage RotorWash
+ * @since RotorWash 1.0
+ */
+
+/**
+ * Outputs sharing links.
+ *
+ * @param string $permalink The post/page permalink
+ * @param bool $su          Whether or not to display StumbleUpon "stumble" button
+ * @param bool $tw          Whether or not to display Twitter "tweet" button
+ * @param bool $gp          Whether or not to display Google "+1" button
+ * @param bool $fb          Whether or not to display Facebook "like" button
+ * @return void
+ *
+ * @since RotorWash 1.0
  */
 function rotor_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
 {
@@ -31,7 +44,6 @@ if( $tw ):
     <!-- Tweet Button -->
     <a href="http://twitter.com/share" class="twitter-share-button" 
        data-count="none" data-href="<?php echo $permalink; ?>">Tweet</a>
-    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 <?php
 endif;
@@ -44,7 +56,7 @@ if( $gp ):
 <?php
 
 endif;
-if( $fb );
+if( $fb ):
 
 ?>
     <!-- Facebook Like Button -->
@@ -59,3 +71,93 @@ if( $fb );
 
 <?php
 }
+
+if( ! function_exists( 'rw_posted_on' ) ) :
+/**
+ * Prints HTML with meta information for the current post—date/time and author.
+ *
+ * @since RotorWash 1.0
+ */
+function rw_posted_on() {
+    printf( __( '<span class="%1$s">Posted on</span> %2$s <span class="meta-sep">by</span> %3$s', 'rotorwash' ),
+        'meta-prep meta-prep-author',
+        sprintf( '<a href="%1$s" title="%2$s" rel="bookmark"><span class="entry-date">%3$s</span></a>',
+            get_permalink(),
+            esc_attr( get_the_time() ),
+            get_the_date()
+        ),
+        sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s">%3$s</a></span>',
+            get_author_posts_url( get_the_author_meta( 'ID' ) ),
+            sprintf( esc_attr__( 'View all posts by %s', 'rotorwash' ), get_the_author() ),
+            get_the_author()
+        )
+    );
+}
+endif;
+
+if( ! function_exists( 'rw_posted_in' ) ) :
+/**
+ * Prints HTML with meta information for the current post (category, tags and permalink).
+ *
+ * @param bool $show_tags Whether or not tags should be displayed (defaults to TRUE)
+ * @return void
+ * @since RotorWash 1.0
+ */
+function rw_posted_in( $show_tags=TRUE )
+{
+    $tag_list = get_the_tag_list( '', ', ' );
+
+    if( $tag_list && $show_tags )
+    {
+        $posted_in = __( 'Category: %1$s Tags: %2$s.', 'rotorwash' );
+    }
+    elseif( is_object_in_taxonomy( get_post_type(), 'category' ) )
+    {
+        $posted_in = __( 'Category %1$s.', 'rotorwash' );
+    }
+    else
+    {
+        $posted_in = __( '', 'rotorwash' );
+    }
+
+    printf($posted_in, get_the_category_list( ', ' ), $tag_list);
+}
+endif;
+
+if( !function_exists('rw_get_social_links') ):
+/**
+ * Outputs a list of social media links.
+ * 
+ * To edit these links, use the Links tab in the dashboard. Links must be 
+ * categorized with "Social Links" to be retrieved. The links are ordered by 
+ * rating, ascending. It's all the way at the bottom of the link editor.
+ *
+ * @param string $id    An ID attribute for the element
+ * @param string $class A class attribute for the element
+ * @return void
+ * @since RotorWash 1.0
+ */
+function rw_social_links( $id="social-links", $class=NULL )
+{
+?>
+
+<ul id="<?php echo $id; ?>"
+    class="<?php echo $class; ?>">
+<?php
+
+$links = get_bookmarks(array('category_name' => 'Social Links', 'orderby'=>'rating'));
+foreach( $links as $link ):
+    $slug = strtolower(preg_replace('/[^\w-]/', '', $link->link_name));
+
+?>
+    <li class="<?php echo $slug; ?>">
+        <a href="<?php echo $link->link_url; ?>" 
+           data-window="new"><?php echo $link->link_name; ?></a>
+    </li>
+<?php endforeach; ?>
+
+</ul>
+
+<?php
+}
+endif;
