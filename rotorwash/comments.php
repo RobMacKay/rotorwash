@@ -51,11 +51,10 @@ if( have_comments() ):
 
 <?php
 
-    if( get_comment_pages_count()>1 && get_option('page_comments') )
-    {
+    if( get_comment_pages_count()>1 && get_option('page_comments') ):
         previous_comments_link(__('&larr; Older Comments', 'rotorwash'));
         next_comments_link(__('Newer Comments &rarr;', 'rotorwash'));
-    }
+    endif;
 
 else: // if no comments have been posted
 
