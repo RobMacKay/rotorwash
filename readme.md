@@ -10,7 +10,7 @@ Documentation
 There is currently no documentation. Everyone should yell at [Jason](https://github.com/jlengstorf)
 until he posts it.
 
-When documentation is added, it will live on the [rotorwash wiki](https://github.com/copterlabs/rotorwash/wiki).
+When documentation is added, it will live on the [RotorWash wiki](https://github.com/copterlabs/rotorwash/wiki).
 
 Credits
 -------
