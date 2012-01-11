@@ -43,13 +43,14 @@ add_action('wp_footer', 'rw_add_fb_root');
  *
  * @return void
  */
-function add_fb_open_graph_tags()
+function rw_add_fb_og_tags()
 {
     $opts = get_option('rw_theme_settings');
     if( empty($opts['fb_admins']) )
     {
         trigger_error("No Facebook Admin IDs were supplied. Please update " . TEMPLATEPATH . "/assets/config.php");
     }
+
     $locale    = get_locale(); // This avoids a warning in the Facebook URL linter
     $site_name = get_bloginfo('name'); // Loads the name of the website
     $fb_admins = $opts['fb_admins']; // The Facebook ID of the site admin(s), separated by commas
@@ -65,24 +66,26 @@ function add_fb_open_graph_tags()
         }
         else
         {
-            $image = 'http://www.robkingfitness.com/wp-content/themes/copterTheme/images/RK_logo_footer.png';
+            $image = get_bloginfo('template_directory') . '/assets/images/rotorwash-default-image.jpg';
         }
 
+        $excerpt = !empty($post->post_excerpt) ? $post->post_excerpt : apply_filters('get_the_excerpt', $post->post_content);
+
         // Gets entry-specific info for display
-        $title       = get_the_title($post->ID);
+        $title       = $post->post_title;
         $url         = get_permalink($post->ID);
         $type        = "article";
-           $description = apply_filters('get_the_excerpt', get_post($post->ID)->post_content);
-       }
-       else
-       {
-           // For non-blog posts (pages, home page, etc.), we display website info only
-           $title       = $site_name;
-           $url         = site_url();
-           $image       = 'http://www.robkingfitness.com/wp-content/themes/copterTheme/images/RK_logo_footer.png';
+        $description = trim(strip_tags($excerpt));
+    }
+    else
+    {
+        // For non-blog posts (pages, home page, etc.), we display website info only
+        $title       = $site_name;
+        $url         = site_url();
+        $image       = get_bloginfo('template_directory') . '/assets/images/rotorwash-default-image.jpg';
         $type        = "website";
         $description = get_bloginfo('description');
-       }
+    }
 
     // Output the OG tags directly
 ?>
@@ -99,7 +102,27 @@ function add_fb_open_graph_tags()
 
 <?php
 }
-add_action('wp_head', 'add_fb_open_graph_tags');
+add_action('wp_head', 'rw_add_fb_og_tags');
+
+/**
+ * Adds the HTML5shiv script to the head
+ * 
+ * @return void
+ * @since RotorWash 1.0.1
+ */
+function rw_add_html5shiv(  )
+{
+
+?>
+
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<?php
+
+}
+add_action('wp_head', 'rw_add_html5shiv');
 
 /**
  * Enqueues scripts for the theme
