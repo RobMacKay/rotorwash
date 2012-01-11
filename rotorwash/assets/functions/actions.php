@@ -102,18 +102,6 @@ function add_fb_open_graph_tags()
 add_action('wp_head', 'add_fb_open_graph_tags');
 
 /**
- * Registers scripts for the theme
- * 
- * @return void
- * @since RotorWash 1.0
- */
-function rw_register_scripts(  )
-{
-    wp_register_script('twitter_widgets', 'http://platform.twitter.com/widgets.js', NULL, FALSE, TRUE);
-}
-add_action('wp_register_scripts', 'rw_register_scripts');
-
-/**
  * Enqueues scripts for the theme
  * 
  * @return void
@@ -122,6 +110,8 @@ add_action('wp_register_scripts', 'rw_register_scripts');
 function rw_enqueue_scripts(  )
 {
     wp_enqueue_script('jquery');
+
+    wp_register_script('twitter_widgets', 'http://platform.twitter.com/widgets.js', NULL, FALSE, TRUE);
     wp_enqueue_script('twitter_widgets');
 }
 add_action('wp_enqueue_scripts', 'rw_enqueue_scripts');
