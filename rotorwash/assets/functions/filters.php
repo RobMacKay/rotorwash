@@ -131,6 +131,7 @@ function rw_excerpt_length( $length=100 )
 }
 add_filter( 'excerpt_length', 'rw_excerpt_length', 10, 1 );
 
+if( !function_exists('rw_continue_reading_link') ):
 /**
  * Returns a "Continue Reading" link for excerpts
  *
@@ -141,6 +142,7 @@ function rw_continue_reading_link()
 {
     return ' <a href="'. get_permalink() . '" class="more-link">' . __( 'More', 'rotorwash' ) . '</a>';
 }
+endif;
 
 /**
  * Replaces "[...]" (appended to automatically generated excerpts) with 
