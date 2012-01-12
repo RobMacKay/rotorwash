@@ -17,9 +17,9 @@
  * @param bool $fb          Whether or not to display Facebook "like" button
  * @return void
  *
- * @since RotorWash 1.0
+ * @since RotorWash 1.0.2
  */
-function rotor_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
+function rw_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
 {
     if( $permalink===NULL )
     {
@@ -70,6 +70,90 @@ if( $fb ):
 </span><!-- end .rw-social-sharing -->
 
 <?php
+}
+
+/**
+ * Displays social sharing links
+ * 
+ * @return void
+ * @since RotorWash 1.0
+ * @deprecated 1.0.2
+ */
+function rotor_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
+{
+    trigger_error('rotor_social_sharing() is deprecated. Use rw_social_sharing() instead.');
+    rw_social_sharing($permalink, $su, $tw, $gp, $fb);
+}
+
+/**
+ * Outputs a PayPal donation button
+ * 
+ * @return void
+ * @since RotorWash 1.0.2
+ */
+function rw_donate_button( $post_id=NULL, $options=array() )
+{
+    // Load options that were entered at the theme settings page
+    $opts = get_option('rw_theme_settings');
+
+    // If no PayPal email address is supplied, stop
+    if( empty($opts['paypal_addr']) )
+    {
+        trigger_error(
+                'No PayPal email address supplied. Add this on the "' 
+                . get_current_theme() 
+                . '" Settings page in the Dashboard.'
+            );
+        return;
+    }
+
+    $defaults = array(
+            'title_before'  => '<h3>',
+            'title_after'   => '</h3>',
+            'class'         => 'paypal-donation',
+            'button_image'  => 'https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif',
+        );
+
+    // Check if user-supplied options were created
+    $o = is_array($options) ? array_merge($defaults, $options) : $defaults;
+    
+    // Check for settings, supply defaults otherwise
+    $paypal_title = !empty($opts['paypal_title']) ? $opts['paypal_title'] : 'Donate to ' . get_bloginfo('name');
+    $paypal_currency = !empty($opts['paypal_currency']) ? $opts['paypal_currency'] : 'USD';
+
+    // Since the item description is shown to the user on checkout, complain if it's blank
+    if( empty($opts['paypal_item']) )
+    {
+        trigger_error(
+                'No PayPal item name supplied. Add this on the "' 
+                . get_current_theme() 
+                . '" Settings page in the Dashboard.'
+            );
+        $paypal_item = 'Donation to ' . get_bloginfo('name');
+    }
+    else
+    {
+        $paypal_item = $opts['paypal_item'];
+    }
+
+?>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" 
+      class="<?php echo esc_attr($o['class']); ?>">
+    <?php echo $o['title_before'], $opts['paypal_title'], $o['title_after']; ?>
+
+    <input type="image" name="submit" border="0" 
+           src="<?php echo $o['button_image']; ?>" 
+           alt="PayPal - The safer, easier way to pay online" />
+
+    <input type="hidden" name="business" value="<?php echo $opts['paypal_addr']; ?>" />
+    <input type="hidden" name="cmd" value="_donations" />
+    <input type="hidden" name="item_name" value="<?php echo $paypal_item; ?>" />
+    <input type="hidden" name="item_number" value="<?php echo $post_id; ?>" />
+    <input type="hidden" name="currency_code" value="<?php echo $paypal_currency; ?>" />
+    <img alt="" border="0" width="1" height="1" src="https://www.paypal.com/en_US/i/scr/pixel.gif" />
+</form>
+<?php
+
 }
 
 if( ! function_exists( 'rw_posted_on' ) ) :
