@@ -165,6 +165,14 @@ function register_custom_settings(  )
 {
 	register_setting('rw-theme-settings', 'rw_theme_settings');
 
+    // Theme Settings
+	add_settings_section('rw-theme-settings', 'Theme Settings', 'rw_theme_settings_text', 'rw-theme-settings');
+    add_settings_field( 'default_image', 'Default Image', 'rw_default_image', 'rw-theme-settings', 'rw-theme-settings', array('label_for'=>'default_image'));
+
+    // Google Analytics
+	add_settings_section('rw-analytics-settings', 'Site Stats Settings', 'rw_ga_settings_text', 'rw-theme-settings');
+    add_settings_field( 'ga_id', 'Google Analytics ID', 'rw_ga_id', 'rw-theme-settings', 'rw-analytics-settings', array('label_for'=>'ga_id'));
+
     // Facebook Stuff
 	add_settings_section('rw-facebook-settings', 'Facebook Settings', 'rw_fb_settings_text', 'rw-theme-settings');
     add_settings_field( 'fb_app_id', 'Facebook App ID', 'rw_fb_app_id', 'rw-theme-settings', 'rw-facebook-settings', array('label_for'=>'fb_app_id'));
@@ -178,6 +186,28 @@ function register_custom_settings(  )
     add_settings_field('paypal_currency', 'Choose Your Currency', 'rw_paypal_currency', 'rw-theme-settings', 'rw-paypal-settings', array('label_for'=>'paypal_currency'));
 }
 
+function rw_theme_settings_text(  )
+{
+    echo '<p>Add a default image for sharing on Facebook and other fun stuff.</p>';
+}
+
+function rw_default_image(  )
+{
+    rw_text_field(__FUNCTION__);
+}
+
+function rw_ga_settings_text(  )
+{
+    echo '<p>Keep track of your site traffic and stats: '
+        . '<a href="http://www.google.com/analytics/">sign up for Google Analytics</a></p>'
+        . '<p>Your Analytics ID will look something like this: UA-12345678-9</p>';
+}
+
+function rw_ga_id(  )
+{
+    rw_text_field(__FUNCTION__);
+}
+
 function rw_fb_settings_text(  )
 {
     echo '<p>Facebook settings. These are for comment administration and other good stuff.</p>'
@@ -189,14 +219,12 @@ function rw_fb_settings_text(  )
 
 function rw_fb_app_id(  )
 {
-    $opts = get_option('rw_theme_settings');
-    echo '<input id="fb_app_id" name="rw_theme_settings[fb_app_id]" size="40" type="text" value="' . $opts['fb_app_id'] . '" />';
+    rw_text_field(__FUNCTION__);
 }
 
 function rw_fb_admins(  )
 {
-    $opts = get_option('rw_theme_settings');
-    echo '<input id="fb_admins" name="rw_theme_settings[fb_admins]" size="40" type="text" value="' . $opts['fb_admins'] . '" />';
+    rw_text_field(__FUNCTION__);
 }
 
 function rw_paypal_settings_text(  )
@@ -210,16 +238,12 @@ function rw_paypal_settings_text(  )
 
 function rw_paypal_addr(  )
 {
-    $opts = get_option('rw_theme_settings');
-    $paypal_addr = isset($opts['paypal_addr']) ? $opts['paypal_addr'] : '';
-    echo '<input id="paypal_addr" name="rw_theme_settings[paypal_addr]" size="40" type="text" value="' . $paypal_addr . '" />';
+    rw_text_field(__FUNCTION__);
 }
 
 function rw_paypal_item(  )
 {
-    $opts = get_option('rw_theme_settings');
-    $paypal_item = isset($opts['paypal_item']) ? $opts['paypal_item'] : '';
-    echo '<input id="paypal_item" name="rw_theme_settings[paypal_item]" size="40" type="text" value="' . $paypal_item . '" />';
+    rw_text_field(__FUNCTION__);
 }
 
 function rw_paypal_currency(  )
@@ -265,9 +289,15 @@ function rw_paypal_currency(  )
 
 function rw_paypal_title(  )
 {
+    rw_text_field(__FUNCTION__);
+}
+
+function rw_text_field( $func )
+{
+    $field = str_replace('rw_', '', $func);
     $opts = get_option('rw_theme_settings');
-    $paypal_title = isset($opts['paypal_title']) ? $opts['paypal_title'] : '';
-    echo '<input id="paypal_title" name="rw_theme_settings[paypal_title]" size="40" type="text" value="' . $paypal_title . '" />';
+    $value = isset($opts[$field]) ? $opts[$field] : '';
+    echo '<input id="' . $field . '" name="rw_theme_settings[' . $field . ']" size="40" type="text" value="' . $value . '" />';
 }
 
 function rw_settings_page(  )
