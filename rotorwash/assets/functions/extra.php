@@ -2,22 +2,21 @@
 /**
  * RotorWash extra functions.
  *
- * @package WordPress
- * @subpackage RotorWash
- * @since RotorWash 1.0
+ * @package     WordPress
+ * @subpackage  RotorWash
+ * @since       1.0
  */
 
 /**
  * Outputs sharing links.
  *
- * @param string $permalink The post/page permalink
- * @param bool $su          Whether or not to display StumbleUpon "stumble" button
- * @param bool $tw          Whether or not to display Twitter "tweet" button
- * @param bool $gp          Whether or not to display Google "+1" button
- * @param bool $fb          Whether or not to display Facebook "like" button
- * @return void
- *
- * @since RotorWash 1.0.2
+ * @param   string  $permalink  The post/page permalink
+ * @param   bool    $su         Whether or not to display StumbleUpon "stumble" button
+ * @param   bool    $tw         Whether or not to display Twitter "tweet" button
+ * @param   bool    $gp         Whether or not to display Google "+1" button
+ * @param   bool    $fb         Whether or not to display Facebook "like" button
+ * @return  void
+ * @since   1.0.2
  */
 function rw_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
 {
@@ -36,22 +35,13 @@ function rw_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=T
     </span>
 
 <?php
+
 endif;
-
-if( $tw ):
-    wp_enqueue_script('twitter_widgets');
-?>
-    <!-- Tweet Button -->
-    <a href="http://twitter.com/share" class="twitter-share-button" 
-       data-count="none" data-href="<?php echo $permalink; ?>">Tweet</a>
-
-<?php
-endif;
-
 if( $gp ):
+
 ?>
     <!-- Google +1 -->
-    <span class="gplus"><g:plusone size="medium" href="<?php the_permalink(); ?>"></g:plusone></span>
+    <div class="g-plusone" data-size="medium" data-href="<?php the_permalink(); ?>"></div>
 
 <?php
 
@@ -66,6 +56,16 @@ if( $fb ):
             allowTransparency="true" class="facebook">
     </iframe>
 
+<?php
+
+endif;
+if( $tw ):
+
+?>
+    <!-- Tweet Button -->
+    <a href="http://twitter.com/share" class="twitter-share-button" 
+       data-count="none" data-href="<?php echo $permalink; ?>">Tweet</a>
+
 <?php endif; ?>
 </span><!-- end .rw-social-sharing -->
 
@@ -75,9 +75,9 @@ if( $fb ):
 /**
  * Displays social sharing links
  * 
- * @return void
- * @since RotorWash 1.0
- * @deprecated 1.0.2
+ * @return      void
+ * @since       1.0
+ * @deprecated  1.0.2
  */
 function rotor_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $fb=TRUE )
 {
@@ -88,8 +88,8 @@ function rotor_social_sharing( $permalink=NULL, $su=TRUE, $tw=TRUE, $gp=TRUE, $f
 /**
  * Outputs a PayPal donation button
  * 
- * @return void
- * @since RotorWash 1.0.2
+ * @return  void
+ * @since   1.0.2
  */
 function rw_donate_button( $post_id=NULL, $options=array() )
 {
@@ -137,6 +137,8 @@ function rw_donate_button( $post_id=NULL, $options=array() )
     }
 
 ?>
+
+<!-- PayPal Donation, because pimpin' ain't free -->
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" 
       class="<?php echo esc_attr($o['class']); ?>">
     <?php echo $o['title_before'], $opts['paypal_title'], $o['title_after']; ?>
@@ -160,7 +162,8 @@ if( ! function_exists( 'rw_posted_on' ) ) :
 /**
  * Prints HTML with meta information for the current post—date/time and author.
  *
- * @since RotorWash 1.0
+ * @return  void
+ * @since   1.0
  */
 function rw_posted_on() {
     printf( __( '<span class="%1$s">Posted on</span> %2$s <span class="meta-sep">by</span> %3$s', 'rotorwash' ),
@@ -183,9 +186,9 @@ if( ! function_exists( 'rw_posted_in' ) ) :
 /**
  * Prints HTML with meta information for the current post (category, tags and permalink).
  *
- * @param bool $show_tags Whether or not tags should be displayed (defaults to TRUE)
- * @return void
- * @since RotorWash 1.0
+ * @param   bool $show_tags Whether or not tags should be displayed (defaults to TRUE)
+ * @return  void
+ * @since   1.0
  */
 function rw_posted_in( $show_tags=TRUE )
 {
@@ -216,10 +219,10 @@ if( !function_exists('rw_get_social_links') ):
  * categorized with "Social Links" to be retrieved. The links are ordered by 
  * rating, ascending. It's all the way at the bottom of the link editor.
  *
- * @param string $id    An ID attribute for the element
- * @param string $class A class attribute for the element
- * @return void
- * @since RotorWash 1.0
+ * @param   string $id    An ID attribute for the element
+ * @param   string $class A class attribute for the element
+ * @return  void
+ * @since   1.0
  */
 function rw_social_links( $id="social-links", $class=NULL )
 {
